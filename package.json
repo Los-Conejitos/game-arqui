@@ -6,8 +6,11 @@
   "repository": "",
   "author": "Mostafa Eweda <mo.eweda@gmail.com>",
   "dependencies": {
-    "async": "~0.2.8",
-    "express": "~3.2.4",
-    "socket.io": "~0.9.14"
+    "async": "~0.2.10",
+    "express": "~3.2.6",
+    "socket.io": "~0.9.17",
+    "passport-facebook": "~2.0.0",
+    "passport": "~0.2.2",
+    "mongoose": "~4.0.7"
   }
 }
