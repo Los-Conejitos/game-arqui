@@ -19,7 +19,7 @@ var io = socketio.listen(server);
 router.use(express.static(__dirname + '/public'));
  
 router.get('/', function(req, res){
-  res.render('/index.html');
+  res.render('/login.html');
 });
 
 var playerCount = 0,
