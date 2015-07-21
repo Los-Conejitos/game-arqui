@@ -5,13 +5,27 @@ var async = require('async');
 var socketio = require('socket.io');
 var express = require('express');
 
+var router = express();
+var mongoose = require('mongoose');
+var passport = require('passport');
+var configDB = require('./public/config/database');
+
+mongoose.connect(configDB.url);
+require('./public/config/passport')(passport);
+
+router.use(passport.initialize());
+router.use(passport.session()); // persistent login sessions
+
+require('./public/app/routes')(router, passport);
+
+
 //
 // ## SimpleServer `SimpleServer(obj)`
 //
 // Creates a new instance of SimpleServer with the following options:
 //  * `port` - The HTTP port to listen on. If `process.env.PORT` is set, _it overrides this value_.
 //
-var router = express();
+
 var server = http.createServer(router);
 var io = socketio.listen(server);
 
@@ -57,9 +71,5 @@ io.on('connection',function(socket){
 });
 
 
-
-
-
- 
 server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0");
 console.log("Game listening on port :D");

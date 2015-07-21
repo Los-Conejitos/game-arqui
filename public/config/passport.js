@@ -1,4 +1,3 @@
-var LocalStrategy = require('passport-local').Strategy;
 
 var User = require('../app/models/user');
 
@@ -13,7 +12,7 @@ module.exports = function(passport){
 
     passport.deserializeUser(function(user,done){
         User.findById(id,function(err,user){
-            done(err,user);
+            done(err,user);X
         });
     });
     passport.use(new FacebookStrategy({
