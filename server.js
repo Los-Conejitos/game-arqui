@@ -1,7 +1,7 @@
 var http = require('http');
 var path = require('path');
 
-var async = require('async');
+//var async = require('async');
 var socketio = require('socket.io');
 var express = require('express');
 
@@ -36,6 +36,15 @@ io.on('connection',function(socket){
     //io.emit('count',{playerCount:playerCount});
     
   },2500);
+  
+  socket.on("identify",function(data) {
+      //buscar en base de datos
+      var name,
+          id;
+          
+          socket.emit("logged",{nameP:name,idPlayer:id});
+          
+  })
   
  /* socket.on('disconnect',function(){
     playerCount--;

@@ -15,6 +15,9 @@ Q.Sprite.extend("Bullet",{
             gravityY:0
         });
          this.add('2d');
+    },
+    step: function(dt){
+        if(this.p.vx==0 && this.p.vy==0)this.destroy();
     }
 });
 

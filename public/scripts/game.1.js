@@ -1,6 +1,12 @@
+window.holi = function(){
 
-window.addEventListener("load",function() {
+var objectFiles = [
+    './scripts/player.1',
+    './scripts/enemy',
+    './scripts/bullet'
+    ]
 
+require(objectFiles, function () {
 var players = [],
     socket,
     UiPlayers = document.getElementById("players");
@@ -87,5 +93,6 @@ Q.loadTMX("level.1.tmx, tileset.png, player.json, player.png, bullet.json, bulle
     
 });
 
-
 });
+
+}

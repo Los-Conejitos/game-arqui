@@ -4,25 +4,19 @@
 
 <head>
 <meta charset="utf-8">
-<title>Un jueguito pe :3</title>
-<script src='lib/quintus.js'></script>
-<script src='lib/quintus_sprites.js'></script>
-<script src='lib/quintus_scenes.js'></script>
-<script src='lib/quintus_input.js'></script>
-<script src='lib/quintus_anim.js'></script>
-<script src='lib/quintus_2d.js'></script>
-<script src='lib/quintus_audio.js'></script>
-<script src='lib/quintus_touch.js'></script>
-<script src='lib/quintus_ui.js'></script>
-<script src='lib/quintus_tmx.js'></script>
+<title>Un jueguito esponjoso :3</title>
+
+<link rel="stylesheet" href="http://zocial.smcllns.com/css/zocial.css" type="text/css" />
+<link href="https://fonts.googleapis.com/css?family=Pompiere" rel="stylesheet" type="text/css">
+<script src='http://cdn.html5quintus.com/v0.2.0/quintus-all.min.js'></script>
 <script src="/socket.io/socket.io.js"></script>
 
 
 <script src="/lib/require.js"></script>
 <script src="scripts/bullet.js"></script>
 <script src="scripts/enemy.js"></script>
-<script src="scripts/player.js"></script>
-<script src="scripts/game.js"></script>
+<script src="scripts/player.1.js"></script>
+<script src="scripts/game.1.js"></script>
 
 <style> 
   body { padding:0px; margin:0px; background:#000;} 
@@ -39,6 +33,51 @@
 </style>
 </head>
 <body>
+  <script>  
+(function(d,s,id) {  
+    var js, fjs = d.getElementsByTagName(s)[0];  
+    if(d.getElementById(id)) return;  
+    js = d.createElement(s); js.id = id;  
+    js.src = "http://connect.facebook.net/es_ES/sdk.js";  
+    fjs.parentNode.insertBefore(js, fjs);  
+}(document, 'script', 'facebook-jssdk'));  
+window.fbAsyncInit = function() {  
+    FB.init({  
+        appId    : '1598060277121297',  
+        cookie   : true,  
+        xfbml    : true,  
+        version  : 'v2.0'  
+    });  
+}
+
+function ingresar() {  
+    FB.login(function(response){  
+        validarUsuario();  
+    }, {scope: 'public_profile, email'});  
+}  
+
+function validarUsuario() {  
+    FB.getLoginStatus(function(response) {  
+        if(response.status == 'connected') {  
+            FB.api('/me', function(response) {  
+                console.log(response.name," ",response.id);
+                require(['./scripts/game.1'],function(){
+              window.holi(response.name,response.id);
+            })
+            });
+        } else if(response.status == 'not_authorized') {  
+            alert('Debes autorizar la app!');
+            
+        } else {  
+            alert('Debes ingresar a tu cuenta de Facebook!');  
+        }  
+    });  
+}  
+</script>  
+  <button class="zocial facebook" onclick="ingresar();">Ingresar con Facebook</button>  
     <span id="players" class="players"></span>
+
+
+<div id="status">
 </body>
 </html>
