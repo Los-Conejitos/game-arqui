@@ -48,7 +48,7 @@ Q.Sprite.extend("Player",{
             speedBullet:500,
             speedBulletsecundary:500,
             speedBulletSpecial:500,
-            idPlayer:"Fox Molder",
+            idPlayer:"",
             life:100,
             flip: "x",
             gravity:0,
@@ -83,7 +83,7 @@ Q.Sprite.extend("Player",{
         //bucle principal de la aplicación
         //var p = this.p;
         //p.flip = p.direction === 'left'?"x":false;
-        p = this.p;
+        var p = this.p;
         if(Q.inputs['left']){
             p.vx=-this.p.speed;
             p.flip="x";
@@ -109,6 +109,15 @@ Q.Sprite.extend("Player",{
         if(!Q.inputs["left"]&&!Q.inputs["right"]&&!Q.inputs["up"]&&!Q.inputs["down"]){
             this.play("idle");
         }
+        p.socket.emit("update",{
+            namep:p.name,
+            idPlayer:p.idPlayer,
+            x:p.x,
+            y:p.y,
+            frame:p.frame,
+            flip:p.flip,
+            life:p.life
+        })
         
     },
     createId:function(){

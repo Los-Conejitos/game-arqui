@@ -1,4 +1,4 @@
-window.holi = function(){
+window.holi = function holiF(nameDePlayer,idDePlayer){
 
 var objectFiles = [
     './scripts/player.1',
@@ -43,24 +43,54 @@ function setUp(stage){
     socket.on('connected', function() {
         console.log("Conectado")
         
-    socket.emit("identify",{token:"token"});    
+    socket.emit("identify",{token:idDePlayer, nameP:nameDePlayer});    
       
     });
     
     socket.on("logged", function(data) {
               
-       var player = new Q.Player({name:data["nameP"], idPlayer:data["idPlayer"], x:160, y:700, socket:socket},"Fox Molder");
+       var player = new Q.Player({name:data["nameP"], idPlayer:data["idPlayer"], x:160, y:700, socket:socket});
        player.play("idle");
        stage.insert(player);
        stage.add('viewport').follow(player);
+       socket.emit('newConnected',{nameP:data["nameP"],idPlayer:data["idPlayer"],x:160,y:700});
         
     });
     
-    socket.on('newConnected',function(data) {
-        var otherPlayer = new Q.OtherPlayer({id:data['id']},data['name']);
+    socket.on('newPersonConnected',function(data) {
+        var otherPlayer = new Q.OtherPlayer({name:data['nameP'], idPlayer:data['idPlayer'],x:data['x'],y:data['y']});
         stage.insert(otherPlayer);
         console.log("Llegaste")
-    })
+    });
+    
+    socket.on('updated',function(data) {
+        var otherPlayer = Q("OtherPlayer").items.filter(function(obj){
+            console.log("idPlayer obj", obj.p.idPlayer);
+            console.log("idPlayer data", data['idPlayer']);
+            return obj.p.idPlayer == data['idPlayer'];
+        })[0];
+        
+        if(otherPlayer){
+            otherPlayer.p.x = data['x'];
+            otherPlayer.p.y = data['y'];
+            otherPlayer.p.frame = data['frame'];
+            otherPlayer.p.flip = data['flip'];
+            otherPlayer.p.life = data['life'];
+        }else{
+            var tmp = new Q.OtherPlayer({
+                name:data['nameP'], 
+                idPlayer:data['idPlayer'],
+                x:data['x'],
+                y:data['y'],
+                frame: data["frame"],
+                flip: data["flip"],
+                life: data["life"]
+            });
+            stage.insert(tmp);
+        }
+        
+    });
+    
     
 }
 
