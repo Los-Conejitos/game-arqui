@@ -4,10 +4,11 @@
 
 <head>
 <meta charset="utf-8">
-<title>Un jueguito esponjoso :3</title>
+<title>World Shock!</title>
 
 <link rel="stylesheet" href="http://zocial.smcllns.com/css/zocial.css" type="text/css" />
 <link href="https://fonts.googleapis.com/css?family=Pompiere" rel="stylesheet" type="text/css">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
 <script src='http://cdn.html5quintus.com/v0.2.0/quintus-all.min.js'></script>
 <script src="/socket.io/socket.io.js"></script>
 
@@ -15,11 +16,11 @@
 <script src="/lib/require.js"></script>
 <script src="scripts/bullet.js"></script>
 <script src="scripts/enemy.js"></script>
-<script src="scripts/player.1.js"></script>
-<script src="scripts/game.1.js"></script>
+<script src="scripts/player.js"></script>
+<script src="scripts/game.js"></script>
 
 <style> 
-  body { padding:0px; margin:0px; background:#000;} 
+  body { padding:0px; margin:0px; background:#5E3914;} 
   .players{
       z-index: 5;
       color:#fff;
@@ -29,6 +30,11 @@
       right: 0;
       text-align: right;
       font-size: 1.5em;
+  }
+
+  #quintus_container{/*contenerdor de canvas*/
+      display:none;
+      border:10px #5F0000 solid;
   }
 </style>
 </head>
@@ -60,8 +66,8 @@ function validarUsuario() {
     FB.getLoginStatus(function(response) {  
         if(response.status == 'connected') {  
             FB.api('/me', function(response) {  
-                console.log(response.name," ",response.id);
-                require(['./scripts/game.1'],function(){
+                console.log(response.name);
+                require(['./scripts/game'],function(){
               window.holi(response.name,response.id);
             })
             });
@@ -74,9 +80,30 @@ function validarUsuario() {
     });  
 }  
 </script>  
-  <button class="zocial facebook" onclick="ingresar();">Ingresar con Facebook</button>  
+<div class="contenedor">
+    <header class="cabezera" >
+        <h1 class="titulo">World Shock</h1>
+        <p> Bienvenidos al mejor juego en la web </p>
+        
+    </header>
+    
+    <div id="login-form">
+        <button class="zocial facebook" onclick="ingresar();">Ingresar con Facebook</button>  
+    </div>
+    
+    
     <span id="players" class="players"></span>
+</div>
 
+
+ <div id='loading'>
+    <div id='loading_container'>
+      <div id='loading_progress'><span>loading...</span></div>
+    </div>
+  </div>
+  
+  
+  
 
 <div id="status">
 </body>

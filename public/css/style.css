@@ -1,0 +1,63 @@
+.titulo {
+    top:250px;
+    color:white;
+    text-align: center;
+    font-family: bomberman;
+    font-size: 70px;
+    letter-spacing:4.3px;
+}
+
+body {
+  width:100%;
+  height:100%;
+  background-image: url("../images/fondo.jpg") !important;
+  background-size:100% 100%;
+}
+
+
+.cabezera {
+    display:block;
+    margin-top: 200px;
+    text-align:center;
+    color:white;
+    font-size:20px;
+}
+
+#login-form{
+  text-align:center;
+}
+
+@font-face {
+    font-family: bomberman;
+    src: url(ufonts.com_bomberman.ttf);
+}
+
+#loading {
+    display:none;
+    margin:50px auto;
+    max-width:1024px;
+    position:fixed;
+    width:100%;
+    height:100%;
+    text-align:center;
+  }
+
+  #loading_container {
+    position:relative;
+    margin:0 auto;
+    width:50%;
+    height:20px;
+    border:1px solid black;
+    text-align:center;
+    padding-top:10px;
+  }
+
+  #loading_progress {
+    width:0%;
+    background-color:red;
+    position:absolute;
+    height:30px;
+    top:0px;
+    left:0px;
+    opacity:0.4;
+  }

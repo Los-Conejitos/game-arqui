@@ -14,10 +14,10 @@ Q.Sprite.extend("Bullet",{
             sensor:true,
             gravityY:0
         });
-         this.add('2d');
+         this.add('2d, animation');
     },
     step: function(dt){
-        if(this.p.vx==0 && this.p.vy==0)this.destroy();
+        if(this.p.x<=80 || this.p.x>=1808 || this.p.y<=80 || this.p.y>=1808)this.destroy();
     }
 });
 
@@ -26,9 +26,9 @@ Q.Bullet.extend("Misil",{
     init:function(p){
         this._super(p,{
             sheet:"bullet",
+            sprite:"bullet",
             pointDamage:10
         });
-        console.log("Holi 2");
     }
 });
 

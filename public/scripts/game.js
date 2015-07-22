@@ -1,10 +1,15 @@
+window.holi = function holiF(nameDePlayer,idDePlayer){
 
-window.addEventListener("load",function() {
+var objectFiles = [
+    './scripts/player',
+    './scripts/enemy',
+    './scripts/bullet'
+    ]
 
+require(objectFiles, function () {
 var players = [],
     socket,
     UiPlayers = document.getElementById("players");
-    //console.log(socket)
 
 var Q = window.Q = Quintus({
     development:true
@@ -37,23 +42,65 @@ function setUp(stage){
     socket.on('connected', function() {
         console.log("Conectado")
         
-    socket.emit("identify",{token:"token"});    
+    socket.emit("identify",{token:idDePlayer, nameP:nameDePlayer});    
       
     });
     
     socket.on("logged", function(data) {
               
-       var player = new Q.Player({name:data["nameP"], idPlayer:data["idPlayer"], x:160, y:700, socket:socket},"Fox Molder");
+       var player = new Q.Player({name:data["nameP"], idPlayer:data["idPlayer"], x:160, y:700, socket:socket});
        player.play("idle");
        stage.insert(player);
-       stage.add('viewport').follow(player);
+       stage.add('viewport').follow(player,{x:true,y:true},{
+           minX:0,maxX:1920,minY:0,maxY:1920
+       });
+       socket.emit('newConnected',{nameP:data["nameP"],idPlayer:data["idPlayer"],x:160,y:700});
         
     });
     
-    socket.on('newConnected',function(data) {
-        var otherPlayer = new Q.OtherPlayer({id:data['id']},data['name']);
+    socket.on('newPersonConnected',function(data) {
+        var otherPlayer = new Q.OtherPlayer({name:data['nameP'], idPlayer:data['idPlayer'],x:data['x'],y:data['y']});
         stage.insert(otherPlayer);
-        console.log("Llegaste")
+    });
+    
+    socket.on('deaded',function(data) {
+         var otherPlayer = Q("OtherPlayer").items.filter(function(obj){
+            return obj.p.idPlayer == data['idPlayer'];
+        })[0];
+        if(otherPlayer)otherPlayer.destroy();
+    })
+    
+    socket.on('updated',function(data) {
+        var otherPlayer = Q("OtherPlayer").items.filter(function(obj){
+            return obj.p.idPlayer == data['idPlayer'];
+        })[0];
+        
+        if(otherPlayer){
+            otherPlayer.p.x = data['x'];
+            otherPlayer.p.y = data['y'];
+            otherPlayer.p.vx = data['vx'];
+            otherPlayer.p.vy = data['vy'];
+            otherPlayer.p.life = data['life'];
+            otherPlayer.p.time = 0;
+        }else{
+            var tmp = new Q.OtherPlayer({
+                name:data['nameP'], 
+                idPlayer:data['idPlayer'],
+                x:data['x'],
+                y:data['y'],
+                vx: data["vx"],
+                vy: data["vy"],
+                life: data["life"]
+            });
+            stage.insert(tmp);
+        }
+        
+    });
+    
+    socket.on('createMisil',function(data) {
+        var tmp = new Q.Misil(data);
+        stage.insert(tmp);
+        tmp.play("misil");
     })
     
 }
@@ -62,21 +109,21 @@ function setUp(stage){
 
 Q.scene("level",function(stage){
     Q.debug = true;
-    Q.stageTMX("level.1.tmx", stage);
+    Q.stageTMX("arena.tmx", stage);
     setUp(stage);
 });
 
-Q.loadTMX("level.1.tmx, tileset.png, player.json, player.png, bullet.json, bullet.png", function(){
-    Q.compileSheets("player.png", "player.json");
+Q.loadTMX("arena.tmx, tiles-32-32.png, lobo.json, lobo.png, bullet.json, bullet.png", function(){
+    Q.compileSheets("lobo.png", "lobo.json");
     Q.compileSheets("bullet.png", "bullet.json");
     
-   Q.animations('player', {
-       idle:{frames:[8], loop:false,rate:1/10},
-       run_player:{frames:[9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,0,1,2,3,4,5,6,7,8], next:'idle', loop:false,rate:1/10}
+   Q.animations('lobo', {
+       idle:{frames:[9], loop:false,rate:1/10},
+       run_player:{frames:[0,1,2,3,4,5,6,7,8,9], next:'idle', loop:false,rate:1/10}
     });
     
     Q.animations("bullet",{
-        misil:{ frames:[39], rate:1/10, flip:false, loop:false },
+        misil:{ frames:[37], rate:1/10, flip:false, loop:false },
         bombo:{ frames:[53], rate:1/10, flip:false, loop:false },
         explotion:{ frames:[63,55,63], rate:1/5, flip:false, loop:false }
     });
@@ -85,7 +132,20 @@ Q.loadTMX("level.1.tmx, tileset.png, player.json, player.png, bullet.json, bulle
     
     
     
+}, {
+  progressCallback: function(loaded,total) {
+    var element = document.getElementById("loading_progress");
+    element.style.width = Math.floor(loaded/total*100) + "%";
+    if(loaded == total){
+        var canvas = document.getElementById("quintus_container");
+        document.getElementById("loading").remove();
+        canvas.style.display = "block";
+    
+    }
+  }
+}
+);
+
 });
 
-
-});
+}

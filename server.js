@@ -70,20 +70,16 @@ io.on('connection',function(socket){
 
       var playerA;
           Person.findOne({'idPlayer':data["token"]},function(err,person){
-            console.log("entró");
             if(err) return console.error(err);
               if(!person){
                 playerA = new Person({name:data["nameP"],idPlayer:data["token"], points:0});
-              console.log(playerA.name);
               playerA.save(function(err, playerA){
               if(err) return console.error(err);
-              console.log("Guardó no person :D")
               socket.emit("logged",{nameP:playerA.name,idPlayer:playerA.idPlayer,points:playerA.points});
             });
               }
               else{
               playerA=person;
-              console.log("Holi boli")
               socket.emit("logged",{nameP:playerA.name,idPlayer:playerA.idPlayer,points:playerA.points});
             }
           });
@@ -99,10 +95,36 @@ io.on('connection',function(socket){
       socket.broadcast.emit('updated',data);
   })
   
- /* socket.on('disconnect',function(){
+  socket.on('newMisil', function(data) {
+      socket.broadcast.emit('createMisil',data);
+  })
+  
+  socket.on('dead', function(data) {
+      socket.broadcast.emit('deaded',data);
+      
+      
+      
+      
+      var playerA;
+      Person.findOne({'idPlayer':data["idBulletPlayer"]},function(err,person){
+            if(err) return console.error(err);
+              if(person){
+              playerA=person;
+              playerA.points+=1;
+              playerA.save();
+            }
+          });
+      
+      
+      
+      
+  })
+  
+  socket.on('disconnect',function(){
     playerCount--;
+    console.log("Deconectado :c")
     io.emit('count',{playerCount:playerCount});
-  });*/
+  });
 
   socket.on('identify',function(data) {
       id.push(data['id']);
