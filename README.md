@@ -13,8 +13,7 @@ Repositorio de la plataforma colaborativa "World Shock"
 ## Pasos para instalar librerias
 1. Ubicarse en la carpeta raiz del proyecto y ejecutar cada comando desde la terminal.
 2. Tener instalado Express.js (sudo npm install expressjs)
-3. Tener instalado Async.js (sudo npm install async)
-4. Tener instalado Socket.io (sudo npm install socket.io)
+3. Tener instalado Socket.io (sudo npm install socket.io)
 
 ## Pasos para correr el juego
 
